@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/sstyle.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/sm.min.css" />
+	<link rel="stylesheet" type="text/css" href="../css/sm-extend.min.css" />
+	<link rel="stylesheet" type="text/css" href="../css/iconfont.css">
+	<link rel="stylesheet" type="text/css" href="../css/myapp.css">
+    <style>
+    </style>
+</head>
+	
+<body>
+    <div class="page" id="div-tall">
+    	<script id="sc-tall" type="text/x-dot-template">
+    	<header class="bar bar-nav scshop-index">
+		    <a class="button button-link button-nav pull-left" href="#" id='scshop-logo' data-transition='slide-out'>
+		      	<img src="../image/logo.png" width="auto" height="34px" />
+		    </a>
+	    	<a class="search-index" href='search.html'>
+	    		<div class='sousuo-box'>
+		    		<label class="sousuo-icon iconfont icon-sousuo"></label>
+		    		<div type="search" class='search'></div>
+	    		</div>
+	    	</a>
+	    	<a class="button button-link button-nav pull-right" href="shangping_search.html" data-transition='slide-out'>
+		      	<span class="icon iconfont icon-iconsousuo"></span>
+		    </a>
+	  	</header>
+		<div class="content">
+	  		<div class="buttons-tab scfl-tab">
+			    <a href="#tab1" class="tab-link active button">分类</a>
+			    <a href="#tab2" class="tab-link button">品牌</a>
+			    <a href="#tab3" class="tab-link button">国家</a>
+		  	</div>
+		  	<div class="tabs scfl-tabs">
+		      	<div id="tab1" class="tab active">
+			  		<div class="scfl-wrap">
+			  			<div class="yscroll1" >
+			  				<ul class="category1 scfl-tab">
+			  					<li class="active"><a href="#" >{{=it.categorylist[0].name}}</a></li>
+			  					<li class=""><a href="#" >{{=it.categorylist[1].name}}</a></li>
+			  					<li class=""><a href="#" >{{=it.categorylist[2].name}}</a></li>
+			  					<li class=""><a href="#" >{{=it.categorylist[3].name}}</a></li>
+			  					<li class=""><a href="#" >{{=it.categorylist[4].name}}</a></li>
+			  					<li class=""><a href="#" >{{=it.categorylist[5].name}}</a></li>
+			  					<li class=""><a href="#" >{{=it.categorylist[6].name}}</a></li>
+			  				</ul>
+			  			</div>
+				  			<div class="yscroll2">
+				  				<div class="yscroll2-box">
+				  					<div class="yscroll2-area">
+						  				<a class="guanggao" href="#">
+						  					<img src="../image/lb.png" class="lazy" />
+						  				</a>
+										{{for(var i in it.categorylist){}}
+						  				<dl class="category2">
+						  					<dt ><span>{{=it.categorylist[i].name}}</span></dt>
+						  					<dd class="c-list">
+						  						{{for(var j in it.categorylist[i].down){}}
+						  						<a href="#">
+						  							<div class="cover">
+						  								<img src="../image/grey.gif" dataimg="../image/spsch.jpg" class="lazy" />
+						  							</div>
+						  							<p class="c-l-tit">
+						  								{{=it.categorylist[i].down[j].name}}
+						  							</p>
+						  						</a>
+						  						{{}}}
+						  					</dd>
+						  				{{}}}
+						  				</dl>
+						  			</div>
+					  			</div>
+				  			</div>
+			  		</div>
+			  	</div>
+			  	<div id="tab2" class="tab">
+		      		<div class="brandscroll">
+		      			<dl class="brand-box">
+		      				<dt>全部品牌</dt>
+		      				<dd>
+		      					{{for(var i in it.bandlist) {}}
+		      					<a href="#">
+		      						<div class="cover">
+		      							<img src="../image/grey.gif" dataimg="{{=it['bandlist'][i]['log']}}" class="lazy" />
+		      						</div>
+		      					</a>
+		      					{{}}}
+		      				</dd>
+		      			</dl>
+		      		</div>
+		      	</div>
+		      	<div id="tab3" class="tab">
+		      		<div class="brandscroll">
+		      			<dl class="brand-box">
+		      				<dt>全部国家</dt>
+		      				<dd>
+		      					{{for(var i in it.bandlist) {}}
+		      					<a href="#">
+		      						<div class="cover">
+		      							<img src="" dataimg="{{=it['bandlist'][i]['log']}}" class="lazy" />
+		      						</div>
+		      					</a>
+		      					{{}}}
+		      				</dd>
+		      			</dl>
+		      		</div>
+		      	</div>
+			</div>
+	  	</div>
+	  </script>
+	</div>
+	<script type="text/javascript" src="../script/api.js"></script>
+    <script type="text/javascript" src="../script/zepto.min.js"></script>
+	<script type="text/javascript" src="../script/sm.min.js"></script>
+	<script type="text/javascript" src="../script/sm-extend.min.js"></script>
+	<script type="text/javascript" src="../script/lazyload.js"></script>
+	<script type="text/javascript" src="../script/doT.js"></script>
+	<script type="text/javascript" src="../script/common.js"></script>
+
+<script type="text/javascript">
+    	apiready = function() {
+    		api.ajax({
+		            url: 'http://'+BASE_URl+'/app/category.action',
+		            method: 'post',
+		            cache:true,
+		            timeout: 30,
+		            dataType: 'json',
+		            returnAll:false,
+		            data:{
+		                values:{
+		                }
+		            }
+		            },function(ret,err){
+		            	var template = $api.byId('sc-tall').innerHTML;
+						$api.byId('div-tall').innerHTML = doT.template( template )(ret);
+		            });
+			
+	     }
+    </script>
+</body>
+</html>

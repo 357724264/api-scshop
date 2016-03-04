@@ -1,0 +1,2 @@
+var BASE_URL = "http://192.168.1.242:8081/";
+var BASE_JOSN_URL = "http://wudianyi.ddns.net:8888/";

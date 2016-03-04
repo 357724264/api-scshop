@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<title>确认订单</title>
+<meta name="viewport" content="initial-scale=1, maximum-scale=1">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+<link rel="stylesheet" href="../css/sm.min.css">
+<link rel="stylesheet" href="../css/sm-extend.min.css">
+<link rel="stylesheet" href="../css/fonts/iconfont.css">
+<link rel="stylesheet" href="../css/myapp.css">
+<script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+<script type="text/javascript" src="http://mp.weixin.qq.com/debug/zh_CN/htmledition/js/jsapisign/sha121d415.js"></script>
+<script>
+	// var jsapi_ticket = '${tick}';
+	// var appId = '${info.appid}'; 
+	// var timestamp = '1';
+	// var nonceStr = '5K8264ILTKCH16CQ2502SI8ZNMTM67VS';
+	// var theUrl = document.URL;
+	// var string1 = 'jsapi_ticket=' + jsapi_ticket + '&noncestr=' + nonceStr + '&timestamp=' + timestamp + '&url=' + theUrl; 
+	// var signature = new jsSHA(string1,"TEXT"); //签名算法
+	// 	signature = signature.getHash("SHA-1","HEX");
+	// var jsApiList = ['chooseWXPay'];
+	// //通过config接口注入权限验证配置
+	// wx.config({
+	//     debug: false, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+	//     appId: appId, // 必填，公众号的唯一标识
+	//     timestamp: timestamp, // 必填，生成签名的时间戳
+	//     nonceStr: nonceStr, // 必填，生成签名的随机串
+	//     signature: signature, // 必填，签名，见附录1
+	//     jsApiList: jsApiList // 必填，需要使用的JS接口列表，所有JS接口列表见附录2
+	// });
+	
+	// 	function wxpay(preid,paySign){
+	// 		wx.chooseWXPay({
+	// 			appId: appId,
+	// 		    timestamp: '1', // 支付签名时间戳，注意微信jssdk中的所有使用timestamp字段均为小写。但最新版的支付后台生成签名使用的timeStamp字段名需大写其中的S字符
+	// 		    nonceStr: '5K8264ILTKCH16CQ2502SI8ZNMTM67VS', // 支付签名随机串，不长于 32 位
+	// 		    package: 'prepay_id='+preid, // 统一支付接口返回的prepay_id参数值，提交格式如：prepay_id=***）
+	// 		    signType: 'MD5', // 签名方式，默认为'SHA1'，使用新版支付需传入'MD5'
+	// 		    paySign: paySign, // 支付签名
+	// 		    success: function (res) {
+	// 		    		window.location.href="order.action?id=${id}";
+	// 		    },
+	// 		    fail:function(res){
+	// 		    	alert("支付失败");
+	// 		    },
+	// 		    cancel:function(res){
+	// 		    	alert("用户取消订单");
+	// 		    }
+	// 		});
+			
+	// 	}
+	</script>
+</head>
+<body>
+	<div class="page" id="div_temp1">
+		<script type="text/x-dot-template" id="data_temp1">
+	  	<header class="bar bar-nav" id="second-bar">
+		    <a class="button button-link button-nav pull-left external" href="#" onclick="openWin('cart','');"  data-transition='slide-out'>
+		      	<span class="icon iconfont icon-xiangzuo2"></span>
+		    </a>
+	    	<h1 class="title">确认订单</h1>
+	  	</header>
+
+	  	<nav class="bar bar-tab" id="shop-cartnav">
+			<div class="shop-jiesuanobox p-o-js">
+				<div class="shop-price-total">
+					实付款&nbsp;:&nbsp;<span>&yen;&nbsp;<font id="allcount">{{=it.order.realmoney}}</font>(含{{=it.order.postage}}邮费)</span>
+				</div>
+				<a href="#" class="shop-settleaccounts">去支付</a>
+			</div>
+		</nav>
+
+	  	<div class="content padd-content">
+	  		<div class="qrdd-addrbox">
+	  			<a href="#" id="addressBtn" class="external" onclick="openWin('address_list','{{=it.order.id}}');">
+	  				<div class="qrdd-addrcont">
+	  					{{? it.order.address}}<span class="qrdd-addr-mr" data-aid="{{=it.order.addressid}}"></span>{{=it.order.address}}<br/>{{=it.order.name}} {{=it.order.phone}}{{??}}去添加一个地址{{?}}
+	  				</div>
+	  			
+	  				<div class="qrdd-jt"><i class="iconfont icon-xiangyou1"></i></div>
+	  			</a>
+	  		</div>
+
+	  		<div class="qrdd-odrbox">
+	  			<div class="qrdd-dpame">{{=it.order.shopname}}</div>
+	  			<dl class="qrdd-pro-box">
+	  				{{~it.item : item}}
+	  				<dd class='qrdd-prolist'>
+	  					<div class="qrdd-proimg">
+	  						<img src="{{=item.pic}}" />
+	  					</div>
+	  					<div class="qrdd-procont">
+	  						<h5 class="qrdd-proname">{{=item.name}}</h5>
+	  						<div class="qrdd-proprice">&yen;&nbsp;{{=item.price}}</div>
+	  						<div>x{{=item.num}}</div>
+	  					</div>
+	  				</dd>
+	  				{{~}}
+	  			</dl>
+	  		</div>
+
+	  		<div class="po-mjlybox open-about">
+	  			<a href="#">
+		  			<span class="pm-tit">买家留言</span>
+		  			<div class="pm-cont" id="lcontent">{{? it.order.leavemessage}}{{=it.order.leavemessage}}{{?}}</div>
+		  			<div class='pm-jt'>
+		  				<i class="iconfont icon-xiangyou1"></i>
+		  			</div>
+		  		</a>
+	  		</div>
+	  		<div class="po-mjlybox">
+	  			<a href="#">
+		  			<span class="pm-tit">订单号</span>
+		  			<div class="pm-cont">{{=it.order.orderSn}}</div>
+		  			<div class='pm-jt'>
+		  				
+		  			</div>
+		  		</a>
+	  		</div>
+	  		<div class="p-yhbox">
+	  			<input type="hidden" id="couponid" value=""/>
+	  			{{? it.order.promotions&&it.order.promotions==1}}
+	  			{{??}}
+	  			<div class='p-yh-list'>
+	  				<label><!-- class="clicked" -->
+		  				<div class="p-yh-icon">
+		  					<i class="iconfont icon-wodeqiajuan"></i>
+		  				</div>
+		  				<div class="p-yh-cont">
+		  					<h5 class="p-yh-c-tit">使用优惠券</h5>
+		  					<span class="p-yh-c-smal" id="yhinfo">可用优惠券{{? it.coupons}}{{=it.coupons.length}}{{??}}0{{?}}张</span>
+		  				</div>
+		  				<p>
+		  					<input type="checkbox" class="p-yh-ipt yhjipt" id="useyh" />
+		  					<i class="iconfont icon-duigou yhicon"></i>
+	  					</p>
+		  			</label>
+	  			</div>
+	  			
+	  			
+	  			<div class='p-yh-list'>
+	  				<label>
+		  				<div class="p-yh-icon p-yh-jficon">
+		  					<i class="iconfont icon-jifen5"></i>
+		  				</div>
+		  				<div class="p-yh-cont">
+		  					<h5 class="p-yh-c-tit">使用积分</h5>
+		  					{{? it.info.pointperyuan < 1}}
+		  					{{? !canuser}}
+		  					<span class="p-yh-c-smal">积分不可用</span>
+		  					{{?}}
+		  					{{??}}
+		  					<span class="p-yh-c-smal">可用积分{{=it.user.point}},抵扣&yen;&nbsp;{{=it.user.point/it.info.pointperyuan}}</span>
+		  					{{?}}
+		  				</div>
+		  				<p>
+			  				<input type="checkbox" class="p-yh-ipt" id="usepoint" {{? !canuser}}disabled="disabled"{{?}}  />
+		  					<i class="iconfont icon-duigou yhicon"></i>
+		  				</p>
+		  				
+		  			</label>
+	  			</div>
+	  			{{?}}
+	  		</div>
+
+	  		<div class="p-zfwaybox">
+	  			<h5 class="p-zfw-tit">选择支付方式</h5>
+	  			<div class="p-zfwlist">
+	  				<label>
+	  					<i class="iconfont icon-weixin"></i>&nbsp;&nbsp;&nbsp;微信支付
+	  					<div class="p-zfwcheck">
+	  						<input name="zffs" type="radio" checked="checked" class="pt" data-type="wx" />
+	  						<i class="iconfont icon-duigou"></i>
+	  					</div>
+	  				</label>
+	  				<label>
+	  					<i class="p-zfyl icon-alipay"></i>&nbsp;&nbsp;&nbsp;支付宝支付
+	  					<div class="p-zfwcheck">
+	  						<input name="zffs" type="radio"  class="pt" data-type="alipay" />
+	  						<i class="iconfont icon-duigou"></i>
+	  					</div>
+	  				</label>
+	  				<label>
+	  					<i class="p-zfyl icon-unionpay"></i>&nbsp;&nbsp;&nbsp;银联支付
+	  					<div class="p-zfwcheck">
+	  						<input name="zffs" type="radio"  class="pt" data-type="unionpay" />
+	  						<i class="iconfont icon-duigou"></i>
+	  					</div>
+	  				</label>
+	  			</div>
+	  		</div>
+	  	</div>	  
+	  	</script>	
+	</div>
+	<div class="yhj-xzbox" id="div_temp2">
+		<script type="text/x-dot-template" id="data_temp2">
+		<div class="yhj-xzarea">
+			<h3 class="box-tit">选择优惠劵</h3>
+			{{~it.coupons : coupon}}
+			<label class="yhj-xz-lb" data-id="{{=coupon.id}}">
+				<strong>&yen;<font id="money{{=coupon.id}}">{{=coupon.money}}</font></strong>
+				<div class="yhj-xz-sysm">
+					<span id="title{{=coupon.id}}">{{=coupon.title}}</span>
+
+					<span>有效期:{{? coupon.forever}}无限期{{??}}{{=coupon.endDate}}{{?}}</span>
+				</div>
+				<input type="radio" name="yhjxz" class="yhjxzinpt">
+				<i class="iconfont icon-duigou xzicon"></i>
+			</label>
+			{{~}}
+			<div class="xzbtnbox">
+				<a href="#" class="cancelbtn">取消</a>
+				<a href="#" class="surebtn">确定</a>
+			</div>
+		</div>
+		</script>
+	</div>
+
+	<div class="popup popup-about popupbox" data-toggle="scroller" id="div_temp3">
+		<script type="text/x-dot-template" id="data_temp3">
+	  	<div class="sp-d-popuparea">
+	  		<div class="p-o-sjlr">
+	  			<textarea id="mjly-text">{{? it.order.leavemessage}}{{=it.order.leavemessage}}{{?}}</textarea>
+	  		</div>
+
+	  		<a class="close-popup sp-d-p-close" href="#"><i class="iconfont icon-duigou1"></i></a>
+	  	</div>
+	  	</script>
+	</div>
+	<script type="text/javascript" src="../script/doT.js" charset="utf-8"></script>
+	<script type='text/javascript' src='../script/base.js' charset='utf-8'></script>
+	<script type='text/javascript' src='../script/api.js' charset='utf-8'></script>
+	<script type='text/javascript' src='../script/zepto.min.js' charset='utf-8'></script>
+    <script type='text/javascript' src='../script/sm.min.js' charset='utf-8'></script>
+    <script type='text/javascript' src='../script/sm-extend.min.js' charset='utf-8'></script>
+    <script type="text/javascript">
+
+		var canuser = true;  				
+	
+    	apiready = function(){
+    		var orderid = api.pageParam.id;
+    		var aid =  api.pageParam.aid;
+
+    		if(!aid) {
+    			aid = "";
+    		}
+
+    		api.ajax({
+    			url : BASE_JSON_URL + "app/pay!sure.action",
+    			method: 'post',
+	            cache:true,
+	            timeout: 30,
+	            dataType: 'json',
+	            returnAll:false,
+	            data:{
+	                values:{
+	                	id:orderid,aid:aid
+	                }
+	            }
+    		},function(ret,err){
+    		
+    			if(ret.info.pointperyuan < 1) {
+    				canuser = false;
+    			}
+    			if(ret.user.point < 1) {
+    				canuser = false;
+    			}
+    			var temp = $api.byId('data_temp1').innerHTML;
+    			$api.byId('div_temp1').innerHTML = doT.template(temp)(ret);
+    			temp = $api.byId('data_temp2').innerHTML;
+    			$api.byId('div_temp2').innerHTML = doT.template(temp)(ret);
+    			temp = $api.byId('data_temp3').innerHTML;
+    			$api.byId('div_temp3').innerHTML = doT.template(temp)(ret);
+
+
+    				var defaultyhjinfo = $("#yhinfo").html();
+			    	var point = ret.user.point;
+			    	var hl = ret.info.pointperyuan;
+			    	var paymoney = ret.order.realmoney;
+			    	function themoney(){
+			    		var aftermoney = paymoney;
+						if($("#usepoint").is(":checked")){
+							aftermoney = aftermoney * 1 - point/hl;
+						}
+						if($("#useyh").is(":checked")){
+							var yhjxzinpts = $(".yhjxzinpt");
+							for(var i=0;i<yhjxzinpts.length;i++){
+								if($(yhjxzinpts[i]).is(":checked")){
+									var yhid = $(yhjxzinpts[i]).parent().attr("data-id");
+									var yhmoney = $("#money"+yhid).html();
+									aftermoney = aftermoney * 1 - yhmoney*1;
+									$("#couponid").val(yhid);
+								}
+							}
+						}
+						if(aftermoney < 0){
+							aftermoney = 0;
+						}
+						$("#allcount").html(aftermoney.toFixed(2));
+			    	}
+			    	
+			    	$(function(){
+			    		$("#usepoint").bind("change",function(){
+				    		if(point<1){
+									return false;
+							}
+							themoney();
+				    	})
+					});
+			    	//弹出条件选择
+			            $(document).on('click','.open-about', function () {
+						  	$.popup('.popup-about');
+						  	$('.popup-overlay').addClass('close-popup');//点击透明层关闭,不是必须
+						});
+
+						$(document).on('change','#mjly-text',function(){
+							var text=$('#mjly-text').val();
+							$('#lcontent').html(text);
+						});
+						
+						$(document).on('click','.shop-settleaccounts',function(){
+							if($(this).hasClass("clicked")){
+								return false;
+							}
+							if($(".qrdd-addr-mr").length<1){
+								$.alert("请选择一个地址");
+								return false;
+							}
+							$(this).addClass("clicked");
+							var aid = $(".qrdd-addr-mr").attr("data-aid");
+							var message = $("#lcontent").html();
+							var usepoint = 0;
+							if($("#usepoint").is(":checked")){
+								usepoint = 1;
+							}
+							var pts = $("input[name='zffs']");
+							
+							for(var i=0;i<pts.length;i++){
+								if($(pts[i]).is(":checked")){
+									pt = $(pts[i]).attr("data-type");
+								}
+							} 
+							var couponid = $("#couponid").val();
+							
+							api.ajax({
+				    			url : BASE_JSON_URL + "app/pay.action",
+				    			method: 'post',
+					            cache:true,
+					            timeout: 30,
+					            dataType: 'json',
+					            returnAll:false,
+					            data:{
+					                values:{
+					                	aid:aid,message:message,usepoint:usepoint,id:orderid,pt:pt,couponid:couponid
+					                }
+					            }
+				    		},function(dat,err){
+				    			if(dat.success){
+										if(dat.ok==1){
+											openWin('order',dat.oid);
+										}else{//如果不是全部积分
+											if(pt=="wx"){
+												alert(dat.appId)
+												wxpay(dat);
+											}else if(pt=="alipay"){
+												alipay(dat.sn,dat.money);
+											}else{
+
+					 							
+											    api.ajax({
+											        url: BASE_JSON_URL + dat.url,
+											        method: 'post',
+											        dataType: 'json',
+											        returnAll:false,
+											        data:{
+											            values: {id: dat.id}//提交商户后台生成的订单ID 
+											        }
+											    },function(ret,err){
+											    	var unPay = api.require('unionPay');
+											        if (ret.success) {
+											            unPay.pay({
+											                tn: ret.tn,
+											                devMode: false
+											            }, function(ret, err){
+											               api.alert({msg:JSON.stringify(ret)});
+											            });
+											        }else {
+											        	$.alert(ret.msg);
+											        }
+											    });
+								
+											}
+											
+										}
+									}else{
+										alert(dat.msg)
+									}
+			    			});
+			    			function wxpay(data){
+			    				
+			    				var weiXin = api.require('weiXin');
+								weiXin.config({
+								     appId:data.appId,
+								     mchId:data.mchId,
+								     partnerKey:data.partnerKey,
+								     notifyUrl:data.notifyUrl
+								},function(ret,err) {
+								     if (ret.status) {
+								     	weiXin.pay({
+										     body: data.body,
+										     totalFee:data.totalFee,
+										     tradeNo:data.tradeNo
+										},function(ret,err) {
+										     if (ret.status) {
+										         alert(ret.result)
+										     }else{
+										         api.alert({msg:err.msg});
+										         alert(err.code)
+										     }
+										});
+
+
+								     }else{
+								         api.alert({msg:err.msg});
+								     }
+								});
+								
+			    			}	
+
+						});
+						window.setTimeout(function(){
+							window.setInterval(checkchange, 30000); 
+						},15000); 
+						
+						var modifytime= ret.order.edittime;
+						var nowmoney = ret.order.realmoney;
+						function checkchange() { 
+
+							api.ajax({
+				    			url : BASE_JSON_URL + "json/order!checkchange.action",
+				    			method: 'post',
+					            cache:true,
+					            timeout: 30,
+					            dataType: 'json',
+					            returnAll:false,
+					            data:{
+					                values:{
+					                	id:orderid
+					                }
+					            }
+				    		},function(dat,err){
+				    			if(dat.edittime!=null){
+									if(dat.edittime >modifytime){
+										modifytime = dat.edittime;
+										$.alert("价格已经被管理员修改过，请按照新的价格付款");
+										$("#allcount").html(dat.money+"&nbsp;&nbsp;<del>"+nowmoney+"</del>");
+									}
+								}
+				    		});
+
+						} 	
+						$(document).on('click','.yhjipt',function(){
+							var _this=$(this);
+							if(_this.is(':checked')){
+								$('.yhj-xzbox').css({display:'block'});
+								$('.popup-overlay').addClass('modal-overlay-visible');
+							}else{
+								$("#couponid").val("");
+								$('.yhj-xzbox').css({display:'none'});
+								$("#yhinfo").html(defaultyhjinfo);
+								$('.popup-overlay').removeClass('modal-overlay-visible');
+							}
+							themoney();
+						});
+						$(document).on('click','.cancelbtn',function(){
+							$('.yhjipt').prop('checked',false);
+							$('.yhj-xzbox').css({display:'none'});
+							$('.popup-overlay').removeClass('modal-overlay-visible');
+						});
+						$(document).on('click','.surebtn',function(){
+							$('.yhjipt').prop('checked',true);
+							$('.yhj-xzbox').css({display:'none'});
+							$('.popup-overlay').removeClass('modal-overlay-visible');
+							themoney();
+						});
+						$(document).on('click','.cancelbtn',function(){
+							$('.yhjipt').prop('checked',false);
+							$('.yhj-xzbox').css({display:'none'});
+							$('.popup-overlay').removeClass('modal-overlay-visible');
+							themoney();
+						});
+						
+						$(document).on('click','.yhj-xz-lb',function(){
+							var id = $(this).attr("data-id");
+							var money = $("#money"+id).html();
+							var title = $("#title"+id).html();
+							$("#couponid").val(id);
+							$(".yhjxzinpt").prop('checked',false);
+							$('.yhjipt').prop('checked',true);
+							$(this).find(".yhjxzinpt").prop('checked',true);
+							$("#yhinfo").html(title+"[抵"+money+"元]");
+							$('.yhj-xzbox').css({display:'none'});
+							$('.popup-overlay').removeClass('modal-overlay-visible');
+							themoney();
+						});
+						if($(".yhj-xz-lb").eq(0).length>0){
+							$(".yhj-xz-lb").eq(0).trigger("click");
+						}
+
+
+
+	    	});
+		function alipay(sn,money){
+			alert("alipay")
+			var obj = api.require('aliPay');
+			var subject = '订单名';
+			var body = '订单描述';
+			var amount = money;
+			var tradeNO = sn;
+			obj.pay({
+			   	subject:"卖疯乐支付",
+			    body:"海外购商品",
+			    amount:amount,
+			    tradeNO:tradeNO
+			},function(ret,err) {
+			    api.alert({
+			        title: '支付结果',
+			        msg: ret.code,
+			        buttons: ['确定']
+			    });
+		});
+		}
+    	}
+
+    
+			
+    </script>  
+</body>
+</html>

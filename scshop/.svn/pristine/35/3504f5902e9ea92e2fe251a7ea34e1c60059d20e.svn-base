@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<title>登录</title>
+		<meta name="viewport" content="initial-scale=1, maximum-scale=1">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link rel="stylesheet" href="../css/iconfont.css">
+		<link rel="stylesheet" href="../css/myapp.css">
+		<style>
+			html {
+				font-size: 20px
+			}
+			@media only screen and (min-width: 400px) {
+				html {
+					font-size: 21.33px !important
+				}
+			}
+			@media only screen and (min-width: 414px) {
+				html {
+					font-size: 22.08px !important
+				}
+			}
+			@media only screen and (min-width: 480px) {
+				html {
+					font-size: 25.6px !important
+				}
+			}
+		</style>
+	</head>
+	<body>
+		<div class="page login-box">
+			<div class="logobox">
+				<img src="../image/login-logo.png" />
+			</div>
+			<div class="login-area">
+				<div class="login-group">
+					<label class="ico iconfont icon-daohangwo"></label>
+					<input type="text" id="phone" class="login-ipt" placeholder="手机号" />
+				</div>
+				<div class="login-group">
+					<label class="ico iconfont icon-mima"></label>
+					<input type="password" id="pwd" class="login-ipt" placeholder="登录密码" />
+				</div>
+				<div class="defaultbtnbox">
+					<button type="button" class="defaultbtn">
+						登录
+					</button>
+					<div class="login-other">
+						<a class="login-wjmm external" href='customer!forgetpass.action'>忘记密码？</a>
+						<a class='login-zczh external' href='register.action'>注册帐号</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</body>
+	<script type='text/javascript' src="../script/jquery-1.8.2.min.js"></script>
+	<script type='text/javascript' src="../script/api.js"></script>
+	<script type="text/javascript" src="../script/base.js"></script>
+	<script type="text/javascript">
+		apiready = function() {
+			var temptoken = $api.getStorage('temptoken');
+			$(document).on('click', '.defaultbtn', function(e) {
+				api.showProgress();
+				var phone = $("#phone").val();
+				var pwd = $("#pwd").val();
+				api.ajax({
+					url : BASE_JOSN_URL + 'app/login!in.action',
+					method : 'post',
+					cache : false,
+					timeout : 30,
+					dataType : 'json',
+					data : {
+						values : {
+							phone : phone,
+							pwd : pwd,
+							temptoken : temptoken
+						},
+						//						files : {
+						//							file : 'fs://test.png'
+						//						}
+					}
+				}, function(ret, err) {
+					if (ret) {
+						if (ret.success) {
+							$api.setStorage('token', ret.token);
+							api.openWin("center.html");
+						} else {
+							api.alert(ret.msg);
+						}
+					} else {
+						api.alert({
+							msg : ('错误码：' + err.code + '；错误信息：' + err.msg + '网络状态码：' + err.statusCode)
+						});
+					};
+					api.hideProgress();
+				});
+			})
+		}
+	</script>
+</html>

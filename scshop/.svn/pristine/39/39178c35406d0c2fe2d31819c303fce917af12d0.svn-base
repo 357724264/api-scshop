@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>店铺分类</title>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<!-- 避免IE使用兼容模式，IE 运行最新的渲染模式,用 Chrome 框架的页面用webkit 内核-->
+	<meta name="renderer" content="webkit">
+	<!-- 启用360浏览器的极速模式(webkit) -->
+	<meta content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no" id="viewport" name="viewport">
+	<!-- 初始化移动浏览显示,移动端必须使用 -->
+	<meta name="format-detection" content="telephone=no" />
+	<meta name="imagemode" content="force">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+	<!-- 危险勿动 -->
+    <script type="text/javascript">
+	!function(n){var e=n.document,t=e.documentElement,i=1080,d=i/150,o="orientationchange"in n?"orientationchange":"resize",a=function(){var n=t.clientWidth||320;n>1080&&(n=1080),t.style.fontSize=n/d+"px"};e.addEventListener&&(n.addEventListener(o,a,!1),e.addEventListener("DOMContentLoaded",a,!1))}(window);
+	</script>
+
+	<link rel="stylesheet" type="text/css" href="../css/fonts/iconfont.css">
+	<link rel="stylesheet" type="text/css" href="../css/shops.css">
+	<script type="text/javascript" src="../script/jquery-1.8.2.min.js"></script>
+	<script type="text/javascript" src="../script/base.js"></script>
+	<script type="text/javascript" src="../script/doT.js"></script>
+	<script type="text/javascript" src="../script/api.js"></script>
+	<script type="text/javascript">
+	apiready = function() {
+		api.ajax({
+    			url : BASE_JSON_URL + "app/shop!category.action",
+    			method: 'post',
+	            cache:true,
+	            timeout: 30,
+	            dataType: 'json',
+	            returnAll:false,
+	            data:{
+	                values:{
+	                	id:api.pageParam.id	
+	                }
+	            }
+	        },function(ret,err){
+	        	var template = $api.byId('data_temp').innerHTML;
+    			$api.byId('div_temp').innerHTML = doT.template(template)(ret);
+    		});
+		$(document).on('click','#searchproduct',function(){
+			var keyword = $("#keyword").val();
+			openWinWithParam("shop_product",{id:api.pageParam.id,keyword:keyword});
+		})
+		$(document).on('click','#allp',function(){
+			openWinWithParam("shop_product",{id:api.pageParam.id});
+		})
+	}
+	</script>
+</head>
+
+<body class="fl-padd">
+	<div class="content">
+		<header class="shops-head headfixed">
+			<a href="shop.action?id=${id}" class="head-left"><i class="iconfont icon-xiangzuo1"></i></a>
+			<input name="id" value="${id}" type="hidden"/>
+			<div class="head-tit">
+				<label class="flssbox">
+					<i class="iconfont icon-sousuo1 ssicon"></i>
+					<input id="keyword" name="keyword" type="search" class="head-ss" placeholder="宝贝关键字" maxlength="60">
+				</label>
+			</div>
+			<a href="#" class="head-right" id="searchproduct">搜索</a>
+		</header>
+		<dl class="fenleibox" id="div_temp">
+			<dt class="alldt">
+				<a href='javacript:;' id="allp">全部商品 <i class="iconfont icon-xiangyou1 dtright"></i></a>
+			</dt>
+			<script type="text/x-dot-template" id="data_temp">
+			{{~it.list : category}}
+			<dt class="itemdt">
+				<a href='javascript:;' onclick="openWinWithParam('shop_product',{id:{{=it.shopid}},fl:{{=category.id}},cname:'{{=category.name}}'})">{{=category.name}}<span class="dtright">查看全部</span></a>
+			</dt>
+			{{? category.hasdown==1}}
+			<dd>
+				{{~category.downList:down}}
+				<a href="javascript:;" onclick="openWinWithParam('shop_product',{id:{{=it.shopid}},sl:{{=down.id}},cname:'{{=down.name}}'})" class="itema">{{=down.name}}</a>
+				{{~}}
+			</dd>
+			{{?}}
+			{{~}}
+			</script>
+		</dl>
+	</div>
+</body>
+</html>

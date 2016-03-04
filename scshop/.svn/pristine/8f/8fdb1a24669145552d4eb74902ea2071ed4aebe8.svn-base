@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>商城分类</title>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">	
+	<!-- 避免IE使用兼容模式，IE 运行最新的渲染模式,用 Chrome 框架的页面用webkit 内核-->
+	<meta name="renderer" content="webkit">
+	<!-- 启用360浏览器的极速模式(webkit) -->
+	<meta content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no" id="viewport" name="viewport">
+	<!-- 初始化移动浏览显示,移动端必须使用 -->
+	<meta name="format-detection" content="telephone=no" />
+	<meta name="imagemode" content="force">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+	<!-- 危险勿动 -->
+    <script type="text/javascript">
+	!function(n){var e=n.document,t=e.documentElement,i=1080,d=i/150,o="orientationchange"in n?"orientationchange":"resize",a=function(){var n=t.clientWidth||320;n>1080&&(n=1080),t.style.fontSize=n/d+"px"};e.addEventListener&&(n.addEventListener(o,a,!1),e.addEventListener("DOMContentLoaded",a,!1))}(window);
+	</script>
+	<style type="text/css">
+		img{display:inline;}
+	</style>
+	<link rel="stylesheet" type="text/css" href="../css/fonts/iconfont.css">
+	<link rel="stylesheet" type="text/css" href="../css/screen.css">
+
+	<script type="text/javascript" src="../script/jquery-1.8.2.min.js"></script>
+	<script type="text/javascript" src='../script/basis.js'></script>
+	<script type="text/javascript" src='../script/jquery.lazyload.min.js?v=1.8.2'></script>
+</head>
+  	
+<body class="bdypadd">
+	<div class="content">
+		<header>
+			<a href="#" class="logo"><img src="../image/logo.png" /></a>
+			<a class="flss-box external" href="#"  onclick="openWin('index_search','');">
+				<i class="iconfont icon-sousuo1"></i>
+			</a>
+			<a href="#" class="ssbtn"><i class="iconfont icon-iconsousuo"></i></a>
+		</header>
+
+		<div class="fltabs">
+			<a href="#tab1" class="tab-link active">分类</a>
+			<a href="#tab2" class="tab-link">品牌</a>
+			<a href="#tab3" class="tab-link">国家</a>
+		</div>
+		<div class="tabs">
+			<div class="flbox tab active" id="tab1">
+				<div class="yscroll1" id="ys1-tall">
+					<script id="scys1-tall" type="text/x-dot-template">
+					<div class='flscroll'>
+						<ul class="lbbox">
+							{{? it.categorylist&&it.categorylist.length > 0}}
+		  					{{~it.categorylist : value : index}}
+		  					<li  class="{{? index==it.index}}active{{?}}" onclick="win({{=index}})">{{=value.name}}</li>
+		  					{{~}}
+		  					{{?}}
+						</ul>
+					</div>
+					</script>
+				</div>
+				<div class="flcont" id="ys2-tall">
+					<script id="scys2-tall" type="text/x-dot-template">
+					<dl class="lbshopbox">
+						<dt><span>{{=it.name}}</span></dt>
+						<dd>
+							{{? it.down&&it.down.length > 0}}
+							{{~it.down : value}}
+	  						<a onclick='openWinWithParam("product_list",{categoryid:{{=value.id}}})'>
+	  							<div class="cover" >
+	  								<img src="{{=value.logo}}" class="lazy" alt="产品" class="cache"/>
+	  							</div>
+	  							<p>
+	  								{{=value.name}}
+	  							</p>
+	  						</a>
+	  						{{~}}
+	  						{{?}}
+						</dd>
+					</dl>
+					</script>
+				</div>
+			</div>
+			<div class="flbox tab" id='tab2'>
+				<script id="sc-tab2" type="text/x-dot-template">
+				<div class='flppbox'>
+					<dl class="pparea">
+						<dt>全部品牌</dt>
+						<dd>
+							{{? it.brandlist&&it.brandlist.length > 0}}
+	      					{{~it.brandlist : brand}}
+	      					<a onclick='openWinWithParam("product_list",{brandid:{{=brand.id}}})'>
+	      						<img src="{{=brand.log}}" class="lazy cache" />
+	      					</a>
+	      					{{~}}
+	      					{{?}}
+						</dd>
+					</dl>
+				</div>
+				</script>
+			</div>
+			<div class="flbox tab" id='tab3'>
+				<script id="sc-tab3" type="text/x-dot-template">
+				<div class='flppbox'>
+					<dl class="pparea">
+						<dt>全部国家</dt>
+						<dd>
+							{{? it.countryList&&it.countryList.length > 0}}
+	      					{{~it.countryList : country}}
+	      					<a onclick='openWinWithParam("product_list",{countryid:{{=country.id}}})' style="height:1.625rem;">
+	  								<img class="cache" src="{{=country.flagIcon}}"/>
+	      					</a>
+	      					{{~}}
+	      					{{?}}
+						</dd>
+					</dl>
+				</div>
+				</script>
+			</div>
+		</div>
+		
+	</div>
+	<script type="text/javascript" src="../script/api.js" charset="utf-8"></script>
+	<script type="text/javascript" src="../script/base.js" charset="utf-8"></script>
+	<script type="text/javascript" src="../script/doT.min.js" charset="utf-8"></script>
+	<script type="text/javascript" src="../script/jquery.tabs.js"></script>
+	<script type="text/javascript" src="../script/jquery.nicescroll.min.js"></script>
+	<script type="text/javascript" src="../script/list.js" charset="utf-8"></script>
+	<script type="text/javascript" src="../script/lazyload.min.js" charset="utf-8"></script>
+	<script type="text/javascript">	
+		function openlist(name,category,id){
+			api.openWin({
+				name:name,
+				url:name+'.html',
+		            pageParam:{
+		            id:pId,
+		            orderType:category
+		            },
+		            reload:true,
+		            delay:100
+			});
+		}
+		var scys1_template = $api.byId('scys1-tall').innerHTML;
+		var scys2_template = $api.byId('scys2-tall').innerHTML;
+    	apiready = function() {
+    		var id;
+    		api.ajax({
+		            url: BASE_JSON_URL+'/app/category.action',
+		            method: 'post',
+		            cache:true,
+		            timeout: 30,
+		            dataType: 'json',
+		            returnAll:false,
+		            data:{
+		                values:{
+		                
+		                }
+		            }
+		            },function(ret,err){
+
+		            	//var html ="";
+						
+						$api.byId('ys1-tall').innerHTML = doT.template( scys1_template )(ret);
+						$api.byId('ys2-tall').innerHTML = doT.template( scys2_template )(ret);
+						
+						var template = $api.byId('sc-tab2').innerHTML;
+						$api.byId('tab2').innerHTML = doT.template( template )(ret);
+						
+						template = $api.byId('sc-tab3').innerHTML;
+						$api.byId('tab3').innerHTML = doT.template( template )(ret);
+						
+						// html += '<dl class="category2" ><dt ><span>'
+						// html += ret.categorylist[0].name;
+						// html += '</span></dt><dd class="c-list"><a href="#"><div class="cover">';
+						// html += '<img src="../image/grey.gif" dataimg="../image/spsch.jpg" class="lazy" />';
+						// html += '</div><p class="c-l-tit">'
+						iCache($('.cache'));
+						
+					
+		            });
+	     }
+	     function win(id){
+		     	
+		     	api.ajax({
+	                url: BASE_JSON_URL+'/app/category.action',
+		            method: 'post',
+		            cache:true,
+		            timeout: 30,
+		            dataType: 'json',
+		            returnAll:false,
+		            data:{
+		                values:{
+		                	index:id
+		                }
+		            }
+		            },function(ret,err){
+		            	
+		            	
+		     //        	for(var num in ret.categorylist){
+		            		
+		     //        		if(ret.categorylist[num].id == id){
+		            			
+							// 	$api.byId('ys2-tall').innerHTML = doT.template( scys2_template )(ret.categorylist[num]);
+							// }
+		     //        	}
+		            
+						$api.byId('ys1-tall').innerHTML = doT.template( scys1_template )(ret);
+
+						
+						$api.byId('ys2-tall').innerHTML = doT.template( scys2_template )(ret);
+
+						iCache($('.cache'));
+		            });
+		     }
+
+		$(function(){
+			$('.yscroll1').niceScroll({cursorborder:"",cursorcolor:"#424242",boxzoom:true});
+			var popid=document.getElementById('yscroll1');
+	    	eventuti.addHandler(popid,'touchstart',function(event){
+	    		eventuti.stopPropagation(event);
+			})
+
+	    	$("img.lazy").lazyload({effect: "fadeIn",threshold:180,failurelimit:100});
+
+	    	$(".nav-list").eq(1).addClass("active");
+			
+		});
+		function iCache(selector) {
+        	selector.each(function(data) {
+                //msg(data);
+                ! function(data) {
+	                var url = selector.eq(data).attr("src");
+	                var img = this;
+	                var filename = GetFileName(url);
+	                var path = "cache://" + filename;
+	                var obj = api.require('fs');
+                    obj.exist({
+                            path : path
+                    }, function(ret, err) {
+                        //msg(ret);
+                        if (ret.exist) {
+                            if (ret.directory) {
+                                    //api.alert({msg:'该路径指向一个文件夹'});
+                            } else {
+                                    //api.alert({msg:'该路径指向一个文件'});
+                                    //selector.eq(data).src=path;
+                                    selector.eq(data).attr('src', null);
+                                    path = api.cacheDir + '/' + filename;
+                                    selector.eq(data).attr('src', path);
+                                    //console.log(selector.eq(data).attr("src"));
+                            }
+                    	} else {
+                            api.download({
+                                url : url,
+	                            savePath : path,
+	                            report : false,
+	                            cache : true,
+	                            allowResume : true
+                        	}, function(ret, err) {
+                                //msg(ret);
+                                if (ret) {
+                                    var value = ('文件大小：' + ret.fileSize + '；下载进度：' + ret.percent + '；下载状态' + ret.state + '存储路径: ' + ret.savePath);
+                            	} else {
+                                	var value = err.msg;
+                                };
+                            });
+                        }
+                    });
+                }(data);
+        	});
+		};
+	</script>
+</body>
+</html>

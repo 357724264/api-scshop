@@ -1,0 +1,185 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <title></title>
+		<!--<link rel="stylesheet" type="text/css" href="./css/api.css" />-->
+		<link rel="stylesheet" type="text/css" href="./css/sm.min.css" />
+		<link rel="stylesheet" type="text/css" href="./css/sm-extend.min.css" />
+		<link rel="stylesheet" type="text/css" href="./css/iconfont.css">
+		<link rel="stylesheet" type="text/css" href="./css/sstyle.css"/>
+		<link rel="stylesheet" type="text/css" href="./css/myapp.css">
+
+    <style>
+        header{ background-color: #f2f2f2; }
+        header ul li { height: 0px; line-height: 50px; text-align: center; display: none; color: #323237; position: relative;font-size: 0px;  }
+        header ul li.active{ display: block; }
+        #footer{  background-color: #f2f2f2; }
+        #footer ul li{  padding-top: 36px; padding-bottom: 4px; background: url() no-repeat center 2px; background-size: auto 30px; text-align: center; }
+        #footer a.active{ color: #d71416; }
+		
+.scshop-nav .tab-item{
+	position: relative;
+    display: table-cell;
+    width: 1%;
+    height: 2.5rem;
+    color: #929292;
+    text-align: center;
+    vertical-align: middle;
+}
+.scshop-nav .tab-item .icon{
+	top: .15rem;
+    width: 1.2rem;
+    height: 1.2rem;
+    font-size: 1.2rem;
+    line-height: 1.2rem;
+    padding-top: 0;
+    padding-bottom: 0;
+}
+.scshop-nav .tab-item .icon~.tab-label{
+    display: block;
+    font-size: .55rem;
+    position: relative;
+    top: .15rem;
+}
+
+	
+    </style>
+</head>
+<body>
+<div id="wrap" class="flex-wrap flex-vertical page">
+    <header>
+        <ul>
+            <li class="border-b" >
+				
+			</li>
+            <li class="border-b" >
+            	
+			</li>
+            <li class="border-b">
+            
+			</li>
+            <li class="border-b">
+            	
+			</li>
+        </ul>
+    </header>
+    <div id="main" class="flex-con">
+
+    </div>
+    <div id="footer" class="border-t">
+        <nav class="flex-wrap scshop-nav">
+		  	<a class="flex-con tab-item active" tapmode="hover" onclick="randomSwitchBtn( this );">
+			    <span class="icon iconfont icon-icon40"></span>
+			    <span class="tab-label">首页</span>
+		  	</a>
+		  	<a class="flex-con tab-item" tapmode="hover" onclick="randomSwitchBtn( this );">
+			    <span class="icon iconfont icon-fenleisousuo"></span>
+			    <span class="tab-label">商城分类</span>
+		  	</a>
+		  	<a class="flex-con tab-item" tapmode="hover" onclick="randomSwitchBtn( this );">
+			    <span class="icon iconfont icon-gouwuche9"></span>
+			    <span class="tab-label">购物车</span>
+		  	</a>
+		  	<a class="flex-con tab-item" tapmode="hover" onclick="randomSwitchBtn( this );">
+			    <span class="icon iconfont icon-wo"></span>
+			    <span class="tab-label">我</span>
+		  	</a>
+		</nav>
+    </div>
+</div>
+</body>
+</html>
+<script type="text/javascript" src="script/api.js"></script>
+<script type="text/javascript" src="script/zepto.min.js"></script>
+<script type="text/javascript" src="script/sm-extend.min.js"></script>
+<script type="text/javascript" src="script/base.js"></script>
+<script type="text/javascript">
+		var mytitle;
+    apiready = function () {
+    	var temptoken = $api.getStorage('temptoken');
+			if (temptoken == null) {
+				temptoken = getUuid();
+				$api.setStorage('temptoken', temptoken);
+			}
+        $api.fixStatusBar( $api.dom('header') );
+        api.setStatusBarStyle({
+            style: 'dark',
+            color: '#6ab494'
+        });
+        funIniGroup();
+    }
+
+    function funIniGroup(){
+        var eHeaderLis = $api.domAll('header li'),
+            frames = [];
+        for (var i = 0,len = eHeaderLis.length; i < len; i++) {
+                if(i==0){
+	                frames.push( { 
+	                    name: 'frame'+i, 
+	                    url:''+BASE_URL+'html/index.html', 
+	                    bgColor : 'rgba(0,0,0,.2)',
+	                    bounces:false
+	                } )
+                }else if(i==1){
+	                frames.push( { 
+	                    name: 'frame'+i, 
+	                    url:''+BASE_URL+'html/category.html', 
+	                    bgColor : 'rgba(0,0,0,.2)',
+	                    bounces:false
+	                } )
+                }else if(i==2){
+	                frames.push( { 
+	                    name: 'frame'+i, 
+	                    url:''+BASE_URL+'html/cart.html', 
+	                    bgColor : 'rgba(0,0,0,.2)',
+	                    bounces:false
+	                } )
+                }else if(i==3){
+	                frames.push( { 
+	                    name: 'frame'+i, 
+	                    url:''+BASE_URL+'html/center.html', 
+	                    bgColor : 'rgba(0,0,0,.2)',
+	                    bounces:false
+	                } )
+                }
+        }
+        api.openFrameGroup({
+            name: 'group',
+            scrollEnabled: false,
+            rect: {
+                x: 0, 
+                y: $api.dom('header').offsetHeight, 
+                w: api.winWidth, 
+                h: $api.dom('#main').offsetHeight
+            },
+            index: 0,
+            frames: frames
+        }, function (ret, err) {
+
+        });
+    }
+
+    // 随意切换按钮
+    function randomSwitchBtn( tag ) {
+        if( tag == $api.dom('#footer a.active') )return;
+        var eFootLis = $api.domAll('#footer a'),
+            eHeaderLis = $api.domAll('header li'),
+            index = 0;
+        for (var i = 0,len = eFootLis.length; i < len; i++) {
+            if( tag == eFootLis[i] ){
+                index = i;
+            }else{
+                $api.removeCls(eFootLis[i], 'active');
+                $api.removeCls(eHeaderLis[i], 'active');
+            }
+        }
+        $api.addCls( eFootLis[index], 'active');
+        $api.addCls( eHeaderLis[index], 'active');
+        api.setFrameGroupIndex({
+            name: 'group',
+            index: index
+        });
+    }
+</script>

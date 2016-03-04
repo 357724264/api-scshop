@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<title>登录</title>
+<meta name="viewport" content="initial-scale=1, maximum-scale=1">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+<link rel="stylesheet" href="../css/sm.min.css">
+<link rel="stylesheet" href="../css/sm-extend.min.css">
+<link rel="stylesheet" href="../css/fonts/iconfont.css">
+<link rel="stylesheet" href="../css/myapp.css">
+</head>
+<body>
+	<div class="page login-box">
+	  	<div class="logobox">
+	  		<img src="../image/login-logo.png" />
+	  	</div>
+	  	<div class="login-area">
+	  		<div class="login-group">
+	  			<label class="ico iconfont icon-daohangwo"></label>
+	  			<input type="text" id="phone" class="login-ipt" placeholder="手机号" />
+	  		</div>
+	  		<div class="login-group">
+	  			<label class="ico iconfont icon-mima"></label>
+	  			<input type="password" id="pwd" class="login-ipt" placeholder="登录密码" />
+	  		</div>
+
+	  		<div class="defaultbtnbox">
+	  			<button type="button" class="defaultbtn" id="loginBtn">登录</button>
+	  			<div class="login-other">
+	  				<a class="login-wjmm external" onclick="openWin('customer_forgetpass','')">忘记密码？</a>
+	  				<a class='login-zczh external' onclick="openWin('register','')">注册帐号</a>
+	  			</div>
+	  		</div>
+	  		
+	  	</div>
+	</div>
+
+	<script type="text/javascript" src="../script/doT.js" charset="utf-8"></script>
+	<script type='text/javascript' src='../script/base.js' charset='utf-8'></script>
+	<script type='text/javascript' src='../script/api.js' charset='utf-8'></script>
+	<script type='text/javascript' src='../script/zepto.min.js' charset='utf-8'></script>
+    <script type='text/javascript' src='../script/sm.min.js' charset='utf-8'></script>
+    <script type='text/javascript' src='../script/sm-extend.min.js' charset='utf-8'></script>
+
+	<script type='text/javascript'>
+
+	apiready = function() {
+		api.addEventListener({
+			name:"keyback" 
+		},function(ret,err){
+			openIndexFrame(0);
+			api.removeEventListener({
+				name : "keyback"
+			});
+			return;
+		});
+		$(document).on('click','#loginBtn',function(){
+		
+			var phone=$("#phone").val();
+			var pass=$("#pwd").val();
+			if(phone=="" || pass==""){
+			    $.alert("帐号或密码不能为空");
+			}else {
+				api.showProgress();	
+				api.ajax({
+					url : BASE_JSON_URL + "app/login!in.action",
+		    			method: 'post',
+			            cache:true,
+			            timeout: 30,
+			            dataType: 'json',
+			            returnAll:false,
+			            data:{
+			            	values:{
+			            		"phone":phone,"pwd":pass
+			            	}
+			            }
+
+				},function(ret,err){
+					if(ret.success){
+						var userid = ret.userid;
+						//绑定推送
+						var tencentPush = api.require('tencentPush');
+						var resultCallback = function(ret, err){
+							
+						    if(ret.status){
+						        api.setStorage("xgToken",ret.token);
+						    }else{
+						        // alert("注册失败，错误码："+err.code+"，错误信息："+err.msg);
+						    }
+						};
+						var params = {account:"UUUUUUUU"+userid};
+						tencentPush.registerPush(params, resultCallback);
+						
+						var redirecturl = api.pageParam.url;
+						var param = api.pageParam.param;
+						
+						if(redirecturl&&redirecturl!="") {
+							openWinWithParam(redirecturl,param);
+						}else {
+							openIndexFrame(3)
+						}
+						
+					}else{
+						$.alert("账号或者密码错误");
+					}
+					api.hideProgress();
+
+				});
+			}
+
+		});
+
+		// apiready = function() {
+		// 	var temptoken = $api.getStorage('temptoken');
+		// 	$(document).on('click', '.defaultbtn', function(e) {
+		// 		api.showProgress();
+		// 		var phone = $("#phone").val();
+		// 		var pwd = $("#pwd").val();
+		// 		api.ajax({
+		// 			url : BASE_JOSN_URL + 'app/login!in.action',
+		// 			method : 'post',
+		// 			cache : false,
+		// 			timeout : 30,
+		// 			dataType : 'json',
+		// 			data : {
+		// 				values : {
+		// 					phone : phone,
+		// 					pwd : pwd,
+		// 					temptoken : temptoken
+		// 				},
+		// 				//						files : {
+		// 				//							file : 'fs://test.png'
+		// 				//						}
+		// 			}
+		// 		}, function(ret, err) {
+		// 			if (ret) {
+		// 				if (ret.success) {
+		// 					$api.setStorage('token', ret.token);
+		// 					api.openWin("center.html");
+		// 				} else {
+		// 					api.alert(ret.msg);
+		// 				}
+		// 			} else {
+		// 				api.alert({
+		// 					msg : ('错误码：' + err.code + '；错误信息：' + err.msg + '网络状态码：' + err.statusCode)
+		// 				});
+		// 			};
+		// 			api.hideProgress();
+		// 		});
+		// 	})
+		// }
+
+	}
+
+	</script>
+
+</body>
+</html>

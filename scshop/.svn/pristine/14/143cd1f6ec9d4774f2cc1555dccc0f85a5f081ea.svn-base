@@ -1,0 +1,421 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<title>个人中心</title>
+<meta name="viewport" content="initial-scale=1, maximum-scale=1">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+<link rel="stylesheet" href="../css/sm.min.css">
+<link rel="stylesheet" href="../css/sm-extend.min.css">
+<link rel="stylesheet" href="../css/sm-extend.min.css">
+<link rel="stylesheet" href="../css/iconfont.css">
+<link rel="stylesheet" href="../css/myapp.css">
+</head>
+<body>
+	<!-- 个人中心 -->
+	<div class="page page-current" id="router">
+	  <script id="js-router" type="text/x-dot-template">
+	  	<header class="bar bar-nav" id="second-bar">
+		    <a class="button button-link button-nav pull-left" href="index.action" data-transition='slide-out'>
+		      	<span class="icon iconfont icon-xiangzuo2"></span>
+		    </a>
+	    	<h1 class="title">个人中心</h1>
+	  	</header>
+
+	  	
+
+	  	<div class="content padd-content" >
+	  		<div class="grzx-headbox" >
+	  			<a href='#router2'>
+	  				<div class="grzx-avatar"><img src="{{= it.customer.pic}}" alt="头像" id="centerhead"/></div>
+	  				<div class="grzx-tit">
+			  			{{=it.customer.name}}
+			  		</div>
+			  		<i class="iconfont icon-xiangyou1 grzx-jt"></i>
+	  			</a>
+	  		</div>
+
+	  		<div class="bar bar-tab grzx-bar">
+			  	<a class="tab-item external" href="order!list.action?tt=0">
+				    <span class="icon iconfont icon-daifukuan"></span>
+				    <span class="tab-label">待付款</span>
+				    {{? it.unpay>0}}<span class="badge">{{=it.unpay}}</span>{{?}}
+			  	</a>
+			  	<a class="tab-item external" href="order!list.action?tt=1">
+				    <span class="icon iconfont icon-daifahuo01"></span>
+				    <span class="tab-label">待发货</span>
+				    {{? it.paid>0}}<span class="badge">{{=it.paid}}</span>{{?}}
+			  	</a>
+			  	<a class="tab-item external" href="order!list.action?tt=2">
+				    <span class="icon iconfont icon-daifahuo011"></span>
+				    <span class="tab-label">已发货</span>
+				    {{? it.send>0}}<span class="badge">{{=it.send}}</span>{{?}}
+			  	</a>
+			  	<a class="tab-item external" href="order!list.action?tt=3">
+				    <span class="icon iconfont icon-daipingjia1"></span>
+				    <span class="tab-label">待评价</span>
+				    {{? it.deal>0}}<span class="badge">{{=it.deal}}</span>{{?}}
+			  	</a>
+			</div>
+
+			<div class="grzx-listgroup">
+				<a class="external"  href="order!list.action">
+					<i class='iconfont icon-dingdan grzxlbicon'></i>&nbsp;我的订单
+					<span class="grzxlg-right">查看全部订单<i class='iconfont icon-xiangyou1'></i></span>
+				</a>
+			</div>
+
+			<div class="grzx-listbox">
+				<div class="grzx-listgroup">
+					<a class="external" onclick='openWinWithParam("coupon",{})'>
+						<i class='iconfont icon-youhuiquan grzxlbicon'></i>&nbsp;我的优惠券
+						<span class="grzxlg-right">查看优惠券<i class='iconfont icon-xiangyou1'></i></span>
+					</a>
+				</div>
+				<div class="grzx-listgroup">
+					<a class="external" href="point!list.action">
+						<i class='iconfont icon-jifen grzxlbicon'></i>&nbsp;我的积分
+						<span class="grzxlg-right">您有{{=it.customer.point}}积分<i class='iconfont icon-xiangyou1'></i></span>
+					</a>
+				</div>
+				<div class="grzx-listgroup">
+					<a  class="external" href="address!list.action">
+						<i class='iconfont icon-dizhi grzxlbicon'></i>&nbsp;收货地址管理
+						<span class="grzxlg-right"><i class='iconfont icon-xiangyou1'></i></span>
+					</a>
+				</div>
+			<!--	<div class="grzx-listgroup">
+					<a class="external" href="#">
+						<i class='iconfont icon-shoudongtuiguang grzxlbicon'></i>&nbsp;我的推广
+						<span class="grzxlg-right"><i class='iconfont icon-xiangyou1'></i></span>
+					</a>
+				</div>-->
+			</div>
+	  	</div>
+	  	</script>
+	</div>
+	
+	<!-- 个人信息  customer.data-->
+	<div class="page" id='router2'>
+	   <script id="js-router2" type="text/x-dot-template">
+	  	<header class="bar bar-nav" id="second-bar">
+		    <a class="button button-link button-nav pull-left" href="#router" data-transition='slide-out'>
+		      	<span class="icon iconfont icon-xiangzuo2"></span>
+		    </a>
+	    	<h1 class="title">个人信息</h1>
+	  	</header>
+
+	  	<div class="content padd-content" >
+	  	
+	  		<div class="grxx-box" >
+	  			<table id = "padd2">
+	  			   
+	  				<tbody>
+	  					<tr>
+	  						<td class="td1">头像</td>
+	  						<td class="td2">
+	  							<div class="abm-img">
+	  								<input  accept="image/*" type="file" id="file" name="file" />
+	  								<img id="headimg" src="{{=it.customer.pic}}" onerror="this.src=''" />
+	  							</div>
+	  						</td>
+	  					</tr>
+	  					<tr>
+	  						<td class="td1">昵称</td>
+	  						<td class="td2"><a class="external" href="customer!nickname.action">
+	  						<!-- <#if !customer.name??>${customer.phone}<#else>${customer.name}</#if> -->
+	  						{{? !it.customer.name}}
+	  						   {{= it.customer.phone}}
+	  						{{??}}
+	  						   {{= it.customer.name}}
+	  						{{?}}
+	  						</a>
+	  						</td>
+	  						  
+	  					</tr>
+	  				</tbody>
+	  				
+	  			</table>
+	  		</div>
+
+	  		<h5 class="obm-tit">安全管理</h5>
+	  		<div class="grxx-box">
+	  			<table>
+	  				<tbody>
+	  					<tr>
+	  						<td class="td1">手机号码</td>
+	  						<td class="td2"><a class="external" href="customer!changephone.action">{{= it.customer.phone}}</a></td>
+	  					</tr>
+	  					<tr>
+	  						<td class="td1">电子邮箱</td>
+	  						<td class="td2">
+	  					    <a class="external" href="login!email.action">
+	  		                   <!-- <#if customer.emailtest==1>
+	  		                   				                             已认证
+	  		                   				               </#if>
+	  		                   				               <#if customer.emailtest==0>
+	  		                   				               未认证
+	  		                   				               </#if> -->
+	  		                   {{? it.customer.emailtest}}
+	  		                      {{? customer.emailtest==1}}已认证{{?}}
+	  		                   {{??}}
+	  		                                                                             未认证
+	  		                   {{?}}
+				           </a></td>
+	  					</tr>
+	  					<tr>
+	  						<td class="td1">登录密码</td>
+	  						<td class="td2"><a class="external"   href="customer!alterpass.action">修改</a></td>
+	  					</tr>
+	  					<tr>
+	  						<td class="td1">代理申请</td>
+	  						<td class="td2">
+	  							<a href="#router3">
+	  								{{? it.agentBill.applystate}}
+	  								   {{? it.applystate==0}}申请中{{?}}
+	  								   {{? it.applystate==1}}  {{= it.agentBill.agentname}}  {{?}}
+	  								   {{? it.applystate==2}}申请失败{{?}}
+	  								{{??}}
+	  								    申请中
+	  								{{?}}
+	  								   
+	  							</a>
+	  						</td>
+	  					</tr>
+	  				</tbody>
+	  			</table>
+	  		</div>
+
+	  		<div class="defaultbtnbox">
+	  			<button type="button" onclick="logout()" class="logofftbtn">注销</button>
+	  		</div>
+	  		
+	  	</div>	  
+	  		</script>
+	</div>
+	
+	<!-- 申请代理页面 -->
+	<div class="page" id='router3'>
+	 <script id="js-router3" type="text/x-dot-template">
+	  	<header class="bar bar-nav" id="second-bar">
+		    <a class="button button-link button-nav pull-left back" href="#router2" data-transition='slide-out'>
+		      	<span class="icon iconfont icon-xiangzuo2"></span>
+		    </a>
+	    	<h1 class="title">申请代理</h1>
+	  	</header>
+
+	  	<div class="content padd-content">
+	  		<div class="registerbox">
+	  			<div class="regist-group">
+	  				<input type="text" id="phone" value="{{? it.agentBill}} {{=it.agentBill.phone}} {{?}}" class="regist-ipt" autocapitalize="off" autocomplete="off" spellcheck="true" placeholder="请输入手机号码" />
+	  			</div>
+	  			<div class="regist-group">
+	  				<input type="text" id="name" value="{{? it.agentBill}} {{=it.agentBill.name}} {{?}}" class="regist-ipt" autocapitalize="off" autocomplete="off" spellcheck="true" placeholder="请输入真实姓名" />
+	  			</div>
+	  			<div class="regist-group">
+	  				<input type="text" id="idnum" value="{{? it.agentBill}} {{=it.agentBill.idnum}} {{?}}" class="regist-ipt" autocapitalize="off" autocomplete="off" spellcheck="true" placeholder="请输入身份证号码" />
+	  			</div>
+	  			<div class="regist-group">
+	  				<input type="text" id="nowaddress" value="{{? it.agentBill}} {{=it.agentBill.nowaddress}} {{?}}" class="regist-ipt" autocapitalize="off" autocomplete="off" spellcheck="true" placeholder="请输入可联系地址" />
+	  			</div>
+	  			
+	  		</div>
+
+	  		<div class="defaultbtnbox">
+	  			<button type="button" class="dia_btn dialog_ok defaultbtn"  {{? it.agentBill}} style="background:#A9A9A9" disabled="disabled" {{?}}> 提交申请</button>
+
+	  		</div>
+	  	</div>
+	  	</script>
+	</div>
+
+
+	<script type="text/javascript" src="../script/jquery-1.8.2.min.js"></script>	
+	<script type="text/javascript" src="../script/list.js"></script>
+    <script type="text/javascript" src="../script/api.js" charset="utf-8"></script>
+	<script type="text/javascript" src="../script/base.js?v=1" charset="utf-8"></script>
+	<script type="text/javascript" src="../script/doT.min.js" charset="utf-8"></script>
+	<script type='text/javascript' src="../script/zepto.min.js" charset='utf-8'></script>
+    <script type='text/javascript' src="../script/sm.min.js" charset='utf-8'></script>
+    <script type='text/javascript' src="../script/sm-extend.min.js" charset='utf-8'></script>
+    <script type="text/javascript" src="../script/lrz.bundle.js"></script>
+    <script type="text/javascript" src="../script/jquery.ajaxfileupload.js"></script>
+    
+    <script type="text/javascript">
+       
+       function logout(){
+           api.ajax({
+                url:BASE_JSON_URL+'/app/logout.action',
+                method: 'post',
+	            cache:true,
+	            timeout: 30,
+	            dataType: 'json',
+	            returnAll:false,
+	            data:{
+	                values:{
+	                
+	                }
+	            }
+	            },function(ret,err){
+	            if(ret.success){
+	              openWin('login','index');
+	            }
+	            
+           });
+       }
+       
+       $(function(){
+			$(document).on("change","#file",function(){
+				 fileuploadimg();
+			})
+		})
+		
+    	function updateimg(img){
+			var p = img;
+			api.ajax({
+                url:BASE_JSON_URL+'/json/customer!updateimg.action',
+                method: 'post',
+	            cache:true,
+	            timeout: 30,
+	            dataType: 'json',
+	            returnAll:false,
+	            data:{
+	                values:{
+	                    "img":p,
+	                }
+	            }
+	            },function(ret,err){
+	            if(ret.success){
+	              openWin('login','index');
+	            }
+	            
+           });
+		}
+		
+		function fileuploadimg(){
+ 			$.ajaxFileUpload({
+				url:BASE_JSON_URL+'/upload.action',       //需要链接到服务器地址
+				secureuri:false,
+				fileElementId:'file',                            //文件选择框的id属性
+				dataType: 'text/html',                                   //服务器返回的格式，可以是json
+				success: function (data, textStatus) {
+					//兼容ie8以及以下版本
+					var dat = eval("("+data+")");
+					if(dat.success){
+						var img = dat.bigurl;						
+						$("#headimg").attr("src",img);
+						$("#centerhead").attr("src",img);
+						
+						updateimg(img);
+						$("#file").bind("change",function(){
+				 			fileuploadimg();
+						});
+					}
+					
+					if(data.msg){
+						alert(data.msg);
+					}
+					if(dat.msg){
+						alert(dat.msg);
+					}				
+					//i++;
+				}
+		});
+	}
+	
+	$(function(){
+    		$(".tab-item").eq(3).addClass("active");
+    	})
+
+    	$(function(){
+        
+        $(".dialog_ok").click(function(){
+            
+			var phone=$("#phone").val();
+			var name=$("#name").val();
+			var idnum=$("#idnum").val();
+			var nowaddress=$("#nowaddress").val();
+			if ($("#phone").val() == "") { 
+				alert("手机号码不能为空！");
+				return;
+			}
+			if (!$("#phone").val().match(/^(((13[0-9]{1})|1[0-9][0-9])+\d{8})$/)) { 
+				alert("手机号码格式不正确！");
+				return;
+			}
+			if (name==""||name==null) { 
+				alert("请填写姓名！");
+				return;
+			}
+			if (idnum==""||idnum==null) { 
+				alert("请填写身份证号！");
+				return;
+			}
+			if (nowaddress==""||nowaddress==null) { 
+				alert("请填写联系地址！");
+				return;
+			}
+		
+			$.ajax({
+				url:"json/customer!submitagent.action",
+				type:"post",
+				data:{"phone":phone,"name":name,"idnum":idnum,"nowaddress":nowaddress},
+				success:function(html){
+					if(html=="success"){
+						alert("申请成功！");
+						location.href="center.action";
+					}else if(html=="have"){
+						alert("已申请过！请耐心等待");
+					}else{
+						alert("未知错误！");
+					}
+				}
+			});
+	 	});
+})
+		
+       apiready = function() {
+    		api.ajax({
+		            url: BASE_JSON_URL+'/app/center.action',
+		            method: 'post',
+		            cache:true,
+		            timeout: 30,
+		            dataType: 'json',
+		            returnAll:false,
+		            data:{
+		                values:{
+		                
+		                }
+		            }
+		            },function(ret,err){
+		            	if(!ret.userid) {
+		            		openWin("login","center");
+		            	}
+						var template = $api.byId('js-router').innerHTML;
+						$api.byId('router').innerHTML = doT.template( template )(ret);
+						
+						template = $api.byId('js-router2').innerHTML;
+						$api.byId('router2').innerHTML = doT.template( template )(ret);
+						
+						template = $api.byId('js-router3').innerHTML;
+						$api.byId('router3').innerHTML = doT.template( template )(ret);
+						
+						
+						
+		            });
+	     }
+    
+    
+       
+       
+
+    </script>
+   	
+    
+    
+</body>
+</html>

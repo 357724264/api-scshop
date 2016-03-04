@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<security>
+<item name="aliPay_partner" value="2088512726593338"/>
+<item name="aliPay_seller" value="sctb01@soldcrazy.com"/>
+<item name="aliPay_rsaPriKey" value="MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDqBqPRkETM4wCcvY9ryN6liWpmNuQS72NtvHzYrO5xsXprl6Tl4vnp1Ub1F+KMD+Y56MJxAZKjXDg0V/HqP04qUfPQD/qt+BdZ7xDAXyjmLQapIAPEVoxxUrM2YU1+T526/bycozhgn2TBoF7sKYqXll+f8XhruLh52sRS/Ag7HwIDAQAB"/>
+<item name="aliPay_rsaPubKey" value="MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDqBqPRkETM4wCcvY9ryN6liWpmNuQS72NtvHzYrO5xsXprl6Tl4vnp1Ub1F+KMD+Y56MJxAZKjXDg0V/HqP04qUfPQD/qt+BdZ7xDAXyjmLQapIAPEVoxxUrM2YU1+T526/bycozhgn2TBoF7sKYqXll+f8XhruLh52sRS/Ag7HwIDAQAB"/>
+<item name="aliPay_notifyURL" value="http://m.123mfl.com"/>
+</security>

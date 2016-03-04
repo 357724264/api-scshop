@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>收货地址</title>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<!-- 避免IE使用兼容模式，IE 运行最新的渲染模式,用 Chrome 框架的页面用webkit 内核-->
+	<meta name="renderer" content="webkit">
+	<!-- 启用360浏览器的极速模式(webkit) -->
+	<meta content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no" id="viewport" name="viewport">
+	<!-- 初始化移动浏览显示,移动端必须使用 -->
+	<meta name="format-detection" content="telephone=no" />
+	<meta name="imagemode" content="force">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+	<!-- 危险勿动 -->
+    <script type="text/javascript">
+	!function(n){var e=n.document,t=e.documentElement,i=1080,d=i/150,o="orientationchange"in n?"orientationchange":"resize",a=function(){var n=t.clientWidth||320;n>1080&&(n=1080),t.style.fontSize=n/d+"px"};e.addEventListener&&(n.addEventListener(o,a,!1),e.addEventListener("DOMContentLoaded",a,!1))}(window);
+	</script>
+
+	<link rel="stylesheet" type="text/css" href="../css/fonts/iconfont.css">
+	<link rel="stylesheet" type="text/css" href="../css/mycoupon.css">
+	<script type="text/javascript" src="../script/jquery-1.8.2.min.js"></script>
+</head>
+
+<body class="address-padd">	
+	<header class="shops-head">
+		<a href="#" class="head-left"><i class="iconfont icon-xiangzuo1"></i></a>
+		<div class="head-tit">				
+			收货地址
+		</div>
+		<!-- <a href="#" class="head-right preserve"></a> -->
+	</header>
+
+	<div class="content"  id="div_temp">
+		<script type="text/x-dot-template" id="data_temp">
+		<dl class="shdz-box">
+			{{? it.list}}
+			{{~it.list : address : index}}
+			<dd>
+			
+				<div class="ad-1">
+					<div class="ad-1-1">
+						<input type="radio" class="checkInput" name='address' {{? address.id==it.defaultid}}checked="checked"{{?}} value="{{=address.id}}">
+						<i class="iconfont icon-duigou"></i>&nbsp;&nbsp;默认地址
+					</div>
+					<a class='ad-delt' href='javascript:;' id="del_{{=address.id}}"><i class="iconfont icon-shanchu1"></i></a>
+				</div>
+				
+				<div class="ad-2">
+					<a href="#">
+						<p class="ad-name">{{=address.name}} <span>{{=address.phone}}</span></p>
+						<p class='ad-addr'>{{=address.province}} {{=address.city}} {{=address.qu}}  {{=address.address}}<i class='iconfont icon-xiangyou1'></i></p>
+					</a>
+				</div>
+			</dd>
+			{{~}}
+		  	{{?}}
+		</dl>
+		</script>
+	</div>
+
+	<div class="ad-newbtn">
+		<a href="#">+ 新建地址</a>
+	</div>
+	<script type="text/javascript" src="../script/doT.js" charset="utf-8"></script>
+	<script type="text/javascript" src="../script/model.js"></script>
+	<script type="text/javascript" src="../script/api.js"></script>
+	<script type="text/javascript" src="../script/base.js"></script>
+	<script type="text/javascript">
+		
+		 
+		apiready = function() {
+			var pn = 1;
+    		api.ajax({
+    			url : BASE_JSON_URL + "app/address!list.action",
+    			method: 'post',
+	            cache:true,
+	            timeout: 30,
+	            dataType: 'json',
+	            returnAll:false,
+	            data:{
+	                values:{
+	                		
+	                }
+	            }
+	        },function(ret,err){
+	        	var template = $api.byId('data_temp').innerHTML;
+    			$api.byId('div_temp').innerHTML = doT.template(template)(ret);
+    		});
+    		$(document).on('change','.checkInput',function(){
+    			api.showProgress();
+				var addressid = $(this).val();
+				$(".checkInput").prop('checked',false).removeAttr("disabled");
+				$(this).prop('checked',true);
+				$(this).attr("disabled","disabled");
+				api.ajax({
+	    			url : BASE_JSON_URL + 'app/json/address!setDefaultAddress.action',
+	    			method: 'post',
+		            cache:true,
+		            timeout: 30,
+		            dataType: 'json',
+		            returnAll:false,
+		            data:{
+		                values:{
+		                	defaultid:addressid
+		                }
+		            }
+		        },function(ret,err){
+		        	api.hideProgress();
+		        	if(ret.success){
+						api.alert({msg:'设置成功'});
+		        	}else{
+						api.alert({msg:'设置失败'});
+		        	}
+	    		});
+			});	
+			$(document).on('click','.ad-delt', function () {
+	   			var ele = $(this);
+	   			var addressid = $(this).attr("id").replace("del_","");
+	   			api.confirm({
+	   				title:"确定删除该地址吗?",
+	   				buttons:["删除","取消"]
+	   			},function(ret,err){
+	   				 if(ret.buttonIndex==1){
+                        api.ajax({
+			    			url : BASE_JSON_URL + 'app/json/address!delete.action',
+			    			method: 'post',
+				            cache:true,
+				            timeout: 30,
+				            dataType: 'json',
+				            returnAll:false,
+				            data:{
+				                values:{
+				                	id:addressid
+				                }
+				            }
+				        },function(ret,err){
+				        	api.hideProgress();
+				        	if(ret.success){
+				        		ele.parent().parent().remove();
+								api.alert({msg:'删除成功'});
+				        	}else{
+								api.alert({msg:'删除失败'});
+				        	}
+		    			});
+                    }else if(ret.buttonIndex==2)
+                    {
+                           return false;
+                    }
+	   			})
+  			});
+		}	
+		
+	</script>
+</body>
+</html>

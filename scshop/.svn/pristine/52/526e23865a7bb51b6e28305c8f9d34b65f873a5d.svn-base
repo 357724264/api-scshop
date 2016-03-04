@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<title>我的订单</title>
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+<link rel="stylesheet" href="../css/sm.min.css">
+<link rel="stylesheet" href="../css/sm-extend.min.css">
+<link rel="stylesheet" href="../css/fonts/iconfont.css">
+<link rel="stylesheet" href="../css/myapp.css">
+</head>
+<body>
+	<div id="wrap" class="flex-wrap flex-vertical page">
+	  	<header class="bar bar-nav" id="second-bar">
+		    <a class="button button-link button-nav pull-left external" href="#" onclick="openIndexFrame(3);" data-transition='slide-out'>
+		      	<span class="icon iconfont icon-xiangzuo2"></span>
+		    </a>
+	    	<h1 class="title">订单详情</h1>
+	  	</header>
+
+	  	<div class="content paddcont">
+	  		<div class="mo-category" id="div_temp">
+	  			<script type="text/x-dot-template" id="data_temp">
+	  			<a href="#" data-tt="" class="mo-c-list button {{? !it.tt}}active{{?}}">全部</a>
+	  			<a href="#" data-tt="0" class="mo-c-list button {{? it.tt&&it.tt==0}}active{{?}}">待付款</a>
+	  			<a href="#" data-tt="1" class="mo-c-list button {{? it.tt&&it.tt==1}}active{{?}}">待发货</a>
+	  			<a href="#" data-tt="2" class="mo-c-list button {{? it.tt&&it.tt==2}}active{{?}}">已发货</a>
+	  			<a href="#" data-tt="3" class="mo-c-list button {{? it.tt&&it.tt==3}}active{{?}}">待评论</a>
+	  			<a href="#" data-tt="4" class="mo-c-list button {{? it.tt&&it.tt==4}}active{{?}}">已评论</a>
+	  			</script>
+	  		</div>
+	  		<div class="mo-scroll">
+	  			<div class="mo-c-cont">
+	  				<dl class="ord-box infinite-scroll">
+	  				</dl>
+	  				<div class="lodingbox"></div>
+	  			</div>
+	  		</div>
+	  	</div>
+	 <div>  	
+	
+	<script type="text/javascript" src="../script/doT.js" charset="utf-8"></script>
+	<script type='text/javascript' src='../script/base.js' charset='utf-8'></script>
+	<script type='text/javascript' src='../script/api.js' charset='utf-8'></script>
+	<script type='text/javascript' src='../script/zepto.min.js' charset='utf-8'></script>
+    <script type='text/javascript' src='../script/sm.min.js' charset='utf-8'></script>
+    <script type='text/javascript' src='../script/sm-extend.min.js' charset='utf-8'></script>  
+    <script type='text/javascript' src='../script/list.js' charset='utf-8'></script>
+    <script type='text/javascript' src='../script/countdown.js' charset='utf-8'></script>
+    <script type='text/javascript' charset='utf-8'>
+    	apiready = function() {
+    		//var header = document.querySelector('header');
+//$api.fixStatusBar(header);
+//header = $api.offset(header);
+    		var pn = 1;
+    		var tt = api.pageParam.id;
+    		var ret = {"tt":tt};
+    		var template = $api.byId('data_temp').innerHTML;
+    		$api.byId('div_temp').innerHTML = doT.template(template)(ret);
+			
+    			page();
+				window.onscroll = function(){ 
+					if(uiIsPageBottom()){
+						if($(".lodingbox").length >0){
+							if(!$(".lodingbox").hasClass("ling")){
+								page();
+							}
+						}
+					}
+				}
+   			function page(){
+   				var tt = api.pageParam.id;
+   				if(!tt) {
+   					var tt = "";
+   				}
+   				api.ajax({
+	    			url : BASE_JSON_URL + "app/order!list.action",
+	    			method: 'post',
+		            cache:true,
+		            timeout: 30,
+		            dataType: 'text',
+		            returnAll:false,
+		            data:{
+		                values:{
+		                	tt:tt,pn:pn
+		                }
+		            }
+	    		},function(ret,err){
+	    			if(pn == 1){
+	    				$(".ord-box").html(ret);
+					}else{
+						$(".ord-box").append(ret);
+					}
+					pn++;
+					//$(".countdown").countdown();	
+	    		});
+
+			}
+			$(document).on('click','#cancelBtn',function(){
+				var id = $(this).attr("data-id");
+				$.confirm('确定取消订单吗？', function () {
+					api.ajax({
+		    			url : BASE_JSON_URL + "json/order!cancel.action",
+		    			method: 'post',
+			            cache:true,
+			            timeout: 30,
+			            dataType: 'json',
+			            returnAll:false,
+			            data:{
+			                values:{
+			                	id:id
+			                }
+			            }
+		    		},function(ret,err){
+		    			if(ret.success){
+ 							openWin('order_list','0');
+						}
+		    		});
+
+
+			 	 });
+
+			});
+
+			$(document).on('click','#topayBtn',function(){
+				var id = $(this).attr('data-id');
+				openWin('pay_sure',id);
+			});
+
+			$(document).on('click','#div_temp a',function(){
+				var tt = $(this).attr('data-tt');
+				openWin('order_list',tt);
+			});
+
+
+			function cancel(id){
+				$.confirm('确定取消订单吗？', function () {
+
+					api.ajax({
+		    			url : BASE_JSON_URL + "json/order!cancel.action",
+		    			method: 'post',
+			            cache:true,
+			            timeout: 30,
+			            dataType: 'json',
+			            returnAll:false,
+			            data:{
+			                values:{
+			                	id:id
+			                }
+			            }
+		    		},function(ret,err){
+		    			if(ret.success){
+ 							openWin('order_list','0');
+						}
+		    		});
+
+					// $.ajax({
+					// url:"json/order!cancel.action?id="+id,
+					// success:function(ret){
+					// 	var dat = eval("("+ret+")");
+					// 	if(dat.success){
+					// 		$.alert("订单取消成功");
+					// 		openWin('order_list','0');
+					// 	}
+					// }
+					// })
+			  });
+			}
+			function sure(id){
+				$.confirm('确定已经收到商品了吗？', function () {
+
+					api.ajax({
+		    			url : BASE_JSON_URL + "json/order!sure.action",
+		    			method: 'post',
+			            cache:true,
+			            timeout: 30,
+			            dataType: 'json',
+			            returnAll:false,
+			            data:{
+			                values:{
+			                	id:id
+			                }
+			            }
+		    		},function(ret,err){
+		    			if(ret.success){
+ 							openWin('order_list','3');
+						}
+		    		});
+
+
+					// $.ajax({
+					// url:"json/order!sure.action?id="+id,
+					// success:function(ret){
+					// 	var dat = eval("("+ret+")");
+					// 	if(dat.success){
+					// 		$.alert("确定收到货了");
+					// 		window.location.href="order!list.action?tt=3";
+					// 	}
+					// }
+					// })
+			  });
+			}
+
+    	}
+		
+	
+	
+    </script>   
+</body>
+</html>

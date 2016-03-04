@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>商品详情</title>
+	<meta name="viewport" content="initial-scale=1, maximum-scale=1">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">
+	<link rel="stylesheet" href="../css/sm.min.css">
+	<link rel="stylesheet" href="../css/sm-extend.min.css">
+	<link rel="stylesheet" href="../css/sm-extend.min.css">
+	<link rel="stylesheet" href="../css/fonts/iconfont.css">
+	<link rel="stylesheet" href="../css/myapp.css">
+	</head>
+	<body>
+		<div id="div-cartinfo" class="popup popup-about popupbox" data-toggle="scroller">
+				<div class="sp-d-popuparea">
+					<div class="sp-d-sninfo">
+						<div class="sp-d-sn-img">
+							<img id="display_pic" id="tocart_cover" src="" />
+						</div>
+						<div class="sp-d-sn-cont">
+							<p class="sp-d-sn-tit" id="tocart_productname">
+							</p>
+							<p class="sp-d-sn-kc">
+								库存<font id="nowinventory">9999</font>件
+							</p>
+							<div class="sp-d-sn-price">
+								&yen;&nbsp;<span id="display_price"></span>
+							</div>
+						</div>
+					</div>
+					<div class="sp-d-p-group">
+						<h5 class="sp-d-p-class" id="tocart_firstname"></h5>
+						<dl class="sp-d-p-condition" id="firstSpec"></dl>
+					</div>
+					<div class="sp-d-p-group" id="sp-d-p-group2" style="display:none">
+						<h5 class="sp-d-p-class" id="tocart_secondname"></h5>
+						<dl class="sp-d-p-condition" id="secondSpec"></dl>
+					</div>
+					<div class="sp-d-p-group">
+						<h5 class="sp-d-p-class">数量</h5>
+						<div class="sp-d-spinner">
+							<div id="d1" class="Spinner"></div>
+						</div>
+					</div>
+					<div class="sp-d-p-addbtn">
+						<a  href="#">加入购物车</a>
+					</div>
+					<a class="close-popup sp-d-p-close" href="#"><i class="iconfont icon-close"></i></a>
+				</div>
+			</div>
+		<div class="page" id="div-productinfo">
+			<script id="sc-productinfo" type="text/x-dot-template">
+				<header class="bar bar-nav" id="second-bar">
+				<a class="button button-link button-nav pull-left external wdyback" href="javascript:;" data-transition='slide-out' data-url="/"> <span class="icon iconfont icon-xiangzuo2"></span> </a>
+				<h1 class="title">商品详情</h1>
+				<a class="button button-link button-nav pull-right" href="#" id="indexBtn" data-transition='slide-out'> <span class="icon iconfont icon-shouye5"></span> </a>
+				</header>
+				<nav class="bar bar-tab" id="sp-d-car">
+				<div class="sp-d-menu">
+				<a class="tab-item external" id="kfout" href="#"> <span class="icon iconfont icon-kefu1"></span> <span class="tab-label">客服</span> </a>
+				<a class="tab-item external" href="shop.action?id=${product.shopid}"> <span class="icon iconfont icon-xiaodian"></span> <span class="tab-label">店铺</span> </a>
+				<a class="tab-item external" href="cart.action"> <span class="icon iconfont icon-gouwuche9"></span> <span class="tab-label">购物车</span> <span class="badge" id="cartcount">0</span> </a>
+				</div>
+				<div class="sp-d-addcar">
+				<a href="#" class="open-about">加入购物车</a>
+				</div>
+				</nav>
+				<div class="content padd-content" id="div-productinfo">
+				<div class="sp-d-box1">
+				<div class="sp-d-img">
+				<div class="spxqimg">
+				<img src="{{=it.product.cover}}" />
+				</div>
+				</div>
+				<div class="sp-d-cdcjbox">
+				<div class='nationality'>
+				<div class='guoqi'>
+				<img src="{{=it.product.countryIcon}}" />
+				</div>
+				<div class="guoji-name">
+				{{=it.product.country}}
+				</div>
+				</div>
+				<span class="sp-d-sj">由商家{{=it.product.shopName}}提供</span>
+				</div>
+				<h5 class="sp-d-tit">{{=it.product.name}}</h5>
+				<div class="sp-d-price">
+				&yen;&nbsp;<span>{{=it.product.viewprice}}</span>
+				</div>
+				<div class="sp-d-ckj">
+				国内参考价&nbsp;&yen;&nbsp;{{=it.product.indicativePrice}}
+				</div>
+				</div>
+				<div class="sp-d-box2">
+				<div class="sp-d-yhpjtit">
+				用户评价({{=it.tn}})<span class="hpl">平均分:&nbsp;{{? it.product.score==null}} {{it.product.score}} {{??}}4{{?}}</span>
+				</div>
+				{{? it.tn > 0}}
+				<dl class="yhpj-box">
+				{{for(var i in it.commentList){}}
+				<dd class="yhpj-group">
+				<div class="yhpj-avatar">
+				<img src="${comment.userPic}" />
+				</div>
+				<div class="yhpj-cont">
+				<h5 class="yhpj-yhname">{{=it.commentList[i].userName}}</h5>
+				<p class="yhpj-lr">
+				{{=it.commentList[i].content}}
+				</p>
+				<div class="yhpj-oth">
+				<div class="yhpj-xingji" data-val='{{=it.commentList[i].point*20}}'></div>
+				<span class="yhpj-time">{{=it.commentList[i].createDate}}</span>
+				</div>
+				</div>
+				</dd>
+				{{}}}
+				</dl>
+				<a href="comment!list.action?id=${product.id}" class="more-yhpj external">查看更多评论</a>
+				{{??}}
+				<dl class="yhpj-box">
+				<dd class="yhpj-group">
+				<div class="yhpj-cont">
+				暂无评论
+				</div>
+				</dd>
+				</dl>
+				{{?}}
+				</div>
+				<div class="sp-d-box3">
+				<div class="buttons-tab wdjf-mingxi">
+				<a href="#tab1" class="tab-link button">图文详情</a>
+				<a href="#tab2" class="tab-link active button">基本参数</a>
+				</div>
+				<div class="tabs"  id="div-productdesc">
+				<div id="tab1" class="tab spxq-twxq-img">
+				{{=it.product.htmlDesc}}
+				</div>
+				<div id="tab2" class="tab active cpcs">
+				<table class="yhpj-cpcs">
+				<tbody>
+				{{? it.product.country!=null}}
+				<tr>
+				<td width="90px">国家:</td>
+				<td>{{=it.product.country}}</td>
+				</tr>
+				{{?}}
+				{{? it.product.brandName!=null}}
+				<tr>
+				<td width="90px">品牌:</td>
+				<td>{{=it.product.brandName}}</td>
+				</tr>
+				{{?}}
+				{{? it.product.unit!=null}}
+				<tr>
+				<td width="90px">计量单位:</td>
+				<td>{{=it.product.unit}}</td>
+				</tr>
+				{{?}}
+				{{? it.product.weight!=null}}
+				<tr>
+				<td width="90px">重量:</td>
+				<td>{{=it.product.weight}}</td>
+				</tr>
+				{{?}}
+				{{? it.product.volumn!=null}}
+				<tr>
+				<td width="90px">体积:</td>
+				<td>{{=it.product.volumn}}</td>
+				</tr>
+				{{?}}
+				</tbody>
+				</table>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+			</script>
+			<div class="popup-overlay"></div>
+	</body>
+	<script type="text/javascript" src="../script/api.js"></script>
+	<script type='text/javascript' src="../script/zepto.min.js" charset='utf-8'></script>
+	<script type='text/javascript' src='../script/sm.min.js' charset='utf-8'></script>
+	<script type='text/javascript' src='../script/sm-extend.min.js' charset='utf-8'></script>
+	<script type="text/javascript" src="../script/xingji.js"></script><!-- 星级事件 -->
+	<script type="text/javascript" src="../script/jquery.Spinner.js"></script><!-- 加减事件 -->
+	<script type="text/javascript" src="../script/list.js" charset="utf-8"></script>
+	<script type="text/javascript" src="../script/base.js" charset="utf-8"></script>
+	<script type="text/javascript" src="../script/doT.js"></script>
+	<script type="text/javascript" src="../script/product.js"></script>
+</html>
